@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gateway Project | Build Your Future</title>
+
+    <link rel="icon" type="image/svg+xml" href="gateway-icon.svg">
+
+    <meta name="description" content="Gateway gives your school the platform, rubrics, and system to build a real research and mentorship culture — students find opportunities, build projects, and get real feedback.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="The Gateway Project">
+    <meta property="og:description" content="We provide the platform, the rubrics, and the system. You empower your students and teachers to become the mentors of tomorrow.">
+    <meta property="og:image" content="og-image.png">
+    <meta property="og:url" content="https://gateway-project.com">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Gateway Project">
+    <meta name="twitter:description" content="We provide the platform, the rubrics, and the system. You empower your students and teachers to become the mentors of tomorrow.">
+    <meta name="twitter:image" content="og-image.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #fffcf0; 
+            --ink: #0f172a; 
+            --block-blue: #93c5fd;
+            --block-green: #6ee7b7;
+            --block-yellow: #fde047;
+            --block-pink: #f9a8d4;
+        }
+
+        body { background-color: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        body.has-fine-pointer { cursor: none; }
+        .font-mono { font-family: 'Space Mono', monospace; }
+
+        .isometric-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='103.92304845413264' viewBox='0 0 60 103.92304845413264' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%230f172a' stroke-opacity='0.04' stroke-width='2'%3E%3Cpath d='M30 103.92304845413264v-34.64101615137755l30-17.320508075688775M30 69.28203230275509L0 51.96152422706632M30 69.28203230275509L30 34.64101615137755M30 34.64101615137755L60 17.320508075688775M30 34.64101615137755L0 17.320508075688775M0 51.96152422706632v-34.64101615137755M60 51.96152422706632v-34.64101615137755'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 60px 103.92px; transform: scale(1.1); transition: transform 0.2s ease-out;
+        }
+
+        .cursor-block { position: fixed; top: 0; left: 0; width: 16px; height: 16px; background: var(--ink); transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; transition: width 0.2s, height 0.2s; }
+        .cursor-follower { position: fixed; top: 0; left: 0; width: 40px; height: 40px; border: 3px solid var(--ink); background: var(--block-yellow); transform: translate(-50%, -50%); pointer-events: none; z-index: 9998; transition: transform 0.1s ease-out, width 0.2s, height 0.2s; mix-blend-mode: multiply; }
+        body.hovering .cursor-block { width: 8px; height: 8px; background: white; }
+        body.hovering .cursor-follower { width: 60px; height: 60px; background: var(--block-pink); }
+
+        .happy-card { background: white; border: 4px solid var(--ink); box-shadow: 8px 8px 0px var(--ink); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .happy-card:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0px var(--ink); }
+
+        .happy-btn { background: var(--block-green); color: var(--ink); border: 4px solid var(--ink); box-shadow: 6px 6px 0px var(--ink); transition: all 0.15s ease-out; font-weight: 800; }
+        .happy-btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--ink); background: var(--block-yellow); }
+
+        /* Voxel CSS */
+        .scene { width: 100px; height: 100px; perspective: 800px; margin: 0 auto; }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: spinBlock 10s infinite linear; }
+        .cube-face { position: absolute; width: 100px; height: 100px; border: 4px solid var(--ink); display: flex; align-items: center; justify-content: center; }
+        .cube-face-front  { transform: rotateY(  0deg) translateZ(50px); background: var(--block-blue); }
+        .cube-face-right  { transform: rotateY( 90deg) translateZ(50px); background: var(--block-yellow); }
+        .cube-face-back   { transform: rotateY(180deg) translateZ(50px); background: var(--block-pink); }
+        .cube-face-left   { transform: rotateY(-90deg) translateZ(50px); background: var(--bg); }
+        .cube-face-top    { transform: rotateX( 90deg) translateZ(50px); background: var(--block-green); }
+        .cube-face-bottom { transform: rotateX(-90deg) translateZ(50px); background: var(--ink); }
+        
+        @keyframes spinBlock { 
+            0% { transform: rotateX(-20deg) rotateY(0deg); } 
+            100% { transform: rotateX(-20deg) rotateY(360deg); } 
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .cube { animation: none; transform: rotateX(-20deg) rotateY(20deg); }
+            .cursor-follower, .cursor-block { transition: none; }
+            * { scroll-behavior: auto !important; }
+        }
+
+        .content-layer { position: relative; z-index: 10; }
+        .highlight { position: relative; display: inline-block; z-index: 1; }
+        .highlight::after { content: ""; position: absolute; bottom: 4px; left: -2px; right: -2px; height: 12px; background: var(--block-yellow); z-index: -1; transform: rotate(-1deg); }
+    </style>
+</head>
+<body>
+
+    <div class="isometric-bg" id="iso-bg"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+    <div class="cursor-block" id="cursor-block"></div>
+
+    <nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 bg-[#fffcf0]/90 backdrop-blur-md border-b-4 border-slate-900">
+        <div class="flex items-center gap-4 hover-trigger cursor-pointer group">
+            <div class="relative w-10 h-10 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                <div class="absolute inset-0 bg-[#f9a8d4] border-4 border-slate-900 shadow-[2px_2px_0px_#0f172a] transform -rotate-12 rounded-sm"></div>
+                <div class="absolute inset-0 bg-[#fde047] border-4 border-slate-900 shadow-[2px_2px_0px_#0f172a] transform rotate-3 flex items-center justify-center rounded-sm">
+                    <span class="font-black text-2xl text-slate-900 translate-y-[1px]">G</span>
+                </div>
+            </div>
+            <span class="font-black text-2xl tracking-tight hidden sm:inline-block">Gateway</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="font-mono text-xs font-bold hidden sm:flex items-center gap-2 bg-white border-2 border-slate-900 px-3 py-1 shadow-[2px_2px_0px_#0f172a]">
+                <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse border border-slate-900"></div>
+                Online
+            </div>
+            <a href="#request" class="hover-trigger happy-btn px-4 py-2 text-xs uppercase tracking-wide">
+                Request Access
+            </a>
+        </div>
+    </nav>
+
+    <main class="content-layer w-full flex flex-col items-center px-6 md:px-12">
+        <section class="min-h-[90vh] w-full max-w-6xl mx-auto flex flex-col justify-center items-center text-center pt-32 pb-16">
+            <div class="scene mb-10 hover-trigger">
+                <div class="cube">
+                    <div class="cube-face cube-face-front"><span class="font-black text-3xl text-slate-900">✦</span></div>
+                    <div class="cube-face cube-face-right"><span class="font-black text-3xl text-slate-900">▲</span></div>
+                    <div class="cube-face cube-face-back"><span class="font-black text-3xl text-slate-900">●</span></div>
+                    <div class="cube-face cube-face-left"><span class="font-black text-3xl text-slate-900">◆</span></div>
+                    <div class="cube-face cube-face-top"><span class="font-black text-3xl text-slate-900">■</span></div>
+                    <div class="cube-face cube-face-bottom"><span class="font-black text-3xl" style="color: var(--bg);">✚</span></div>
+                </div>
+            </div>
+            <h1 class="text-6xl md:text-8xl lg:text-[8rem] font-black tracking-tight mb-6 leading-[1.05]">
+                The Gateway <br>
+                <span class="highlight text-slate-900">Project.</span>
+            </h1>
+            <p class="text-lg md:text-2xl text-slate-600 font-medium max-w-3xl leading-relaxed mb-12 mt-4">
+                We provide the platform, the rubrics, and the system. You empower your students and teachers to become the mentors of tomorrow.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center gap-5">
+                <a href="#request" class="hover-trigger happy-btn px-10 py-5 text-xl uppercase tracking-wide">
+                    Request Gateway
+                </a>
+                <a href="#request" class="hover-trigger font-black text-sm uppercase tracking-wide underline decoration-4 underline-offset-4 decoration-[#fde047] hover:decoration-[#f9a8d4]">
+                    Become a School Partner
+                </a>
+                <a href="#request" class="hover-trigger font-black text-sm uppercase tracking-wide underline decoration-4 underline-offset-4 decoration-[#fde047] hover:decoration-[#f9a8d4]">
+                    Become a Student Ambassador
+                </a>
+            </div>
+        </section>
+
+        <section id="explore" class="w-full max-w-6xl mx-auto py-24 flex flex-col justify-center">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-black tracking-tight mb-4">Empowering Your School.</h2>
+                <p class="text-slate-600 text-lg font-medium">Build an elite research culture from within.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="happy-card p-8 flex flex-col hover-trigger">
+                    <div class="w-14 h-14 bg-blue-200 border-4 border-slate-900 rounded-full flex items-center justify-center mb-6 shadow-[4px_4px_0px_#0f172a]">
+                        <span class="font-black text-xl">S</span>
+                    </div>
+                    <h3 class="text-2xl font-black mb-3">For Students</h3>
+                    <p class="text-slate-600 font-medium leading-relaxed text-lg">Find opportunities, build projects, and get feedback. Gateway gives you a structured path from idea to submission &mdash; and reviewers who actually explain their scores.</p>
+                </div>
+                <div class="happy-card p-8 flex flex-col hover-trigger">
+                    <div class="w-14 h-14 bg-pink-200 border-4 border-slate-900 rounded-full flex items-center justify-center mb-6 shadow-[4px_4px_0px_#0f172a]">
+                        <span class="font-black text-xl">T</span>
+                    </div>
+                    <h3 class="text-2xl font-black mb-3">For Teachers</h3>
+                    <p class="text-slate-600 font-medium leading-relaxed text-lg">Give students a real structure for research and mentorship. Our rubrics turn "good work" into something specific, teachable, and consistent across every project.</p>
+                </div>
+                <div class="happy-card p-8 flex flex-col hover-trigger">
+                    <div class="w-14 h-14 bg-green-200 border-4 border-slate-900 rounded-full flex items-center justify-center mb-6 shadow-[4px_4px_0px_#0f172a]">
+                        <span class="font-black text-xl">Sc</span>
+                    </div>
+                    <h3 class="text-2xl font-black mb-3">For Schools</h3>
+                    <p class="text-slate-600 font-medium leading-relaxed text-lg">Deploy a research ecosystem without building one from scratch: your own private instance, your own students, your own standards &mdash; powered by Gateway.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full max-w-5xl mx-auto py-16 mb-20">
+            <div class="happy-card bg-[#fde047] p-10 md:p-16 text-center flex flex-col items-center">
+                <h2 class="text-3xl md:text-5xl font-black mb-6">Bring Gateway to your school.</h2>
+                <p class="text-slate-800 font-medium mb-8 max-w-xl text-xl leading-relaxed">
+                    Gateway is currently active at the New Cairo STEM School, and we're onboarding a small group of new schools next.
+                </p>
+                <a href="#request" class="hover-trigger happy-btn px-12 py-5 text-xl uppercase tracking-wide bg-white">
+                    Request Gateway
+                </a>
+            </div>
+        </section>
+
+        <section id="request" class="w-full max-w-4xl mx-auto py-16 mb-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-6xl font-black tracking-tight mb-4">Request <span class="highlight">Access.</span></h2>
+                <p class="text-slate-600 text-lg font-medium">Every school gets its own private Gateway. Students never see another school's workspace.</p>
+            </div>
+
+            <div class="happy-card p-8 md:p-12">
+                <!-- Track selector -->
+                <div class="flex flex-wrap gap-3 mb-10" id="track-tabs">
+                    <button type="button" data-track="Request Gateway" class="track-tab hover-trigger font-mono text-xs font-bold uppercase tracking-wide border-4 border-slate-900 px-4 py-2 shadow-[3px_3px_0px_#0f172a]">
+                        Request Gateway
+                    </button>
+                    <button type="button" data-track="School Partner" class="track-tab hover-trigger font-mono text-xs font-bold uppercase tracking-wide border-4 border-slate-900 px-4 py-2 shadow-[3px_3px_0px_#0f172a]">
+                        School Partner
+                    </button>
+                    <button type="button" data-track="Student Ambassador" class="track-tab hover-trigger font-mono text-xs font-bold uppercase tracking-wide border-4 border-slate-900 px-4 py-2 shadow-[3px_3px_0px_#0f172a]">
+                        Student Ambassador
+                    </button>
+                </div>
+
+                <!-- Real form via FormSubmit.co — free, no signup, no monthly cap. Replace hello@gatewayproject.org
+                     with your real inbox, then submit the form once and click the one-time confirmation
+                     link FormSubmit emails you. After that, submissions just work. -->
+                <form id="gateway-form" action="https://formsubmit.co/ajax/hello@gatewayproject.org" method="POST">
+                    <input type="hidden" name="track" id="track-input" value="Request Gateway">
+                    <input type="hidden" name="_subject" id="subject-input" value="Gateway request: Request Gateway">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="thanks.html">
+                    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="font-mono text-xs font-bold uppercase tracking-wide block mb-2">Name</label>
+                            <input required type="text" name="name" class="w-full border-4 border-slate-900 px-4 py-3 font-medium bg-[#fffcf0] focus:outline-none focus:bg-white">
+                        </div>
+                        <div>
+                            <label class="font-mono text-xs font-bold uppercase tracking-wide block mb-2">Email</label>
+                            <input required type="email" name="email" class="w-full border-4 border-slate-900 px-4 py-3 font-medium bg-[#fffcf0] focus:outline-none focus:bg-white">
+                        </div>
+                        <div>
+                            <label class="font-mono text-xs font-bold uppercase tracking-wide block mb-2">School</label>
+                            <input required type="text" name="school" class="w-full border-4 border-slate-900 px-4 py-3 font-medium bg-[#fffcf0] focus:outline-none focus:bg-white">
+                        </div>
+                        <div>
+                            <label class="font-mono text-xs font-bold uppercase tracking-wide block mb-2">Role</label>
+                            <select name="role" class="w-full border-4 border-slate-900 px-4 py-3 font-medium bg-[#fffcf0] focus:outline-none focus:bg-white">
+                                <option>Student</option>
+                                <option>Teacher</option>
+                                <option>Counselor</option>
+                                <option>Administrator</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="font-mono text-xs font-bold uppercase tracking-wide block mb-2" id="message-label">Tell us about your school</label>
+                        <textarea name="message" rows="4" class="w-full border-4 border-slate-900 px-4 py-3 font-medium bg-[#fffcf0] focus:outline-none focus:bg-white"></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="hover-trigger happy-btn px-10 py-4 text-lg uppercase tracking-wide w-full md:w-auto">
+                        Send Request
+                    </button>
+                </form>
+
+                <!-- Shown after a successful submit -->
+                <div id="form-success" class="hidden text-center py-8">
+                    <h3 class="text-3xl font-black mb-3">Got it. 🎉</h3>
+                    <p class="text-slate-600 font-medium text-lg">We'll get back to you soon.</p>
+                </div>
+
+                <!-- Shown if the form backend isn't connected yet / fails -->
+                <div id="form-error" class="hidden text-center py-6 border-t-4 border-slate-900 mt-8">
+                    <p class="text-slate-600 font-medium">Something went wrong. You can also reach us directly at
+                        <a href="mailto:hello@gatewayproject.org" class="font-black underline">hello@gatewayproject.org</a>.
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-center text-slate-500 font-mono text-xs mt-6">
+                Free form backend via FormSubmit.co, no signup, no monthly limit &mdash; replace hello@gatewayproject.org
+                with your real inbox and confirm the one-time verification email before this goes live.
+            </p>
+        </section>
+
+        <footer class="w-full max-w-6xl mx-auto py-8 border-t-4 border-slate-900 flex flex-col md:flex-row justify-between items-center font-bold text-sm text-slate-800">
+            <p>&copy; 2026 The Gateway Project</p>
+        </footer>
+    </main>
+
+    <script>
+        const trackCopy = {
+            "Request Gateway": { label: "Tell us about your school", btn: "Send Request" },
+            "School Partner": { label: "Why do you want to be Gateway's contact at your school?", btn: "Apply as Partner" },
+            "Student Ambassador": { label: "How would you introduce Gateway to your school?", btn: "Apply as Ambassador" }
+        };
+
+        const trackTabs = document.querySelectorAll('.track-tab');
+        const trackInput = document.getElementById('track-input');
+        const subjectInput = document.getElementById('subject-input');
+        const messageLabel = document.getElementById('message-label');
+        const submitBtn = document.getElementById('submit-btn');
+
+        function setActiveTrack(track) {
+            trackInput.value = track;
+            subjectInput.value = 'Gateway request: ' + track;
+            messageLabel.textContent = trackCopy[track].label;
+            submitBtn.textContent = trackCopy[track].btn;
+            trackTabs.forEach(tab => {
+                if (tab.dataset.track === track) {
+                    tab.classList.add('bg-[#fde047]');
+                    tab.classList.remove('bg-white');
+                } else {
+                    tab.classList.add('bg-white');
+                    tab.classList.remove('bg-[#fde047]');
+                }
+            });
+        }
+
+        trackTabs.forEach(tab => {
+            tab.addEventListener('click', () => setActiveTrack(tab.dataset.track));
+        });
+        setActiveTrack('Request Gateway');
+
+        const gatewayForm = document.getElementById('gateway-form');
+        gatewayForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            document.getElementById('form-error').classList.add('hidden');
+            const data = new FormData(gatewayForm);
+            try {
+                const res = await fetch(gatewayForm.action, {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (res.ok) {
+                    gatewayForm.classList.add('hidden');
+                    document.getElementById('form-success').classList.remove('hidden');
+                } else {
+                    document.getElementById('form-error').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('form-error').classList.remove('hidden');
+            }
+        });
+
+        const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (hasFinePointer) {
+            document.body.classList.add('has-fine-pointer');
+
+            const cursorBlock = document.getElementById('cursor-block');
+            const cursorFollower = document.getElementById('cursor-follower');
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let followerX = mouseX;
+            let followerY = mouseY;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX; mouseY = e.clientY;
+                cursorBlock.style.left = mouseX + 'px';
+                cursorBlock.style.top = mouseY + 'px';
+            });
+            function animateCursor() {
+                if (prefersReducedMotion) {
+                    // snap instead of lerp-following, no continuous rAF loop
+                    cursorFollower.style.left = mouseX + 'px';
+                    cursorFollower.style.top = mouseY + 'px';
+                    return;
+                }
+                followerX += (mouseX - followerX) * 0.25;
+                followerY += (mouseY - followerY) * 0.25;
+                cursorFollower.style.left = followerX + 'px';
+                cursorFollower.style.top = followerY + 'px';
+                requestAnimationFrame(animateCursor);
+            }
+            if (prefersReducedMotion) {
+                window.addEventListener('mousemove', animateCursor);
+            } else {
+                animateCursor();
+            }
+        } else {
+            // Touch/coarse-pointer devices: remove the custom cursor entirely
+            // rather than leaving it frozen in the center of the screen.
+            document.getElementById('cursor-block').remove();
+            document.getElementById('cursor-follower').remove();
+        }
+
+        document.querySelectorAll('a, .hover-trigger').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+    </script>
+</body>
+</html>

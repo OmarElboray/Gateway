@@ -1,0 +1,5 @@
+# Replace gateway-project.com below with your real domain once you have one.
+User-agent: *
+Allow: /
+
+Sitemap: https://gateway-project.com/sitemap.xml
